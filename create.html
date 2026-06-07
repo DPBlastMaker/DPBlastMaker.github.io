@@ -23,7 +23,7 @@
     <div class="glass max-w-md mx-auto fade-in" id="stepForm" style="display:none">
       <h2>Upload DP Blast</h2>
       <p class="text-secondary text-sm mb-24">Upload a transparent PNG frame for your campaign.</p>
-      <form id="createForm">
+      <form id="createForm" onsubmit="handleFormSubmit(event)">
         <div class="form-group">
           <label>Campaign Title</label>
           <input type="text" id="titleInput" placeholder="e.g. Summer Campaign" required />

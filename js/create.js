@@ -27,7 +27,6 @@ async function initCreate() {
   }
   document.getElementById('stepForm').style.display = 'block'
   currentSession = session
-  document.getElementById('createForm').addEventListener('submit', handleFormSubmit)
   document.getElementById('cancelBtn').addEventListener('click', function () {
     window.location.href = 'dashboard.html'
   })
@@ -55,41 +54,48 @@ function generateSlug(title) {
 
 function handleFormSubmit(e) {
   e.preventDefault()
-  var title = document.getElementById('titleInput').value.trim()
-  var file = document.getElementById('frameInput').files[0]
-  var msgEl = document.getElementById('createMsg')
-  msgEl.className = 'msg'
+  try {
+    var title = document.getElementById('titleInput').value.trim()
+    var file = document.getElementById('frameInput').files[0]
+    var msgEl = document.getElementById('createMsg')
+    if (!msgEl) msgEl = document.getElementById('stepForm').querySelector('.msg') || { className: '', textContent: '' }
+    msgEl.className = 'msg'
 
-  if (!title || !file) {
-    msgEl.textContent = 'Enter a title and select a frame PNG.'
-    msgEl.className = 'msg error'
-    return
+    if (!title || !file) {
+      msgEl.textContent = 'Enter a title and select a frame PNG.'
+      msgEl.className = 'msg error'
+      return
+    }
+    if (!file.type.startsWith('image/')) {
+      msgEl.textContent = 'Frame must be an image.'
+      msgEl.className = 'msg error'
+      return
+    }
+
+    var desc = document.getElementById('descInput').value.trim()
+    var anon = document.getElementById('anonCheck').checked
+
+    var slug = generateSlug(title)
+    var ext = file.name.split('.').pop() || 'png'
+    var fileName = slug + '-' + Date.now() + '.' + ext
+
+    pendingSlug = slug
+    pendingTitle = title
+    pendingDesc = desc
+    pendingAnon = anon
+    pendingFileName = fileName
+
+    var reader = new FileReader()
+    reader.onload = function (ev) {
+      pendingFrameDataUrl = ev.target.result
+      showTestStep()
+    }
+    reader.readAsDataURL(file)
+  } catch (err) {
+    var el = document.getElementById('createMsg')
+    if (!el) el = document.getElementById('stepForm').querySelector('.msg')
+    if (el) { el.className = 'msg error'; el.textContent = err.message || 'Something went wrong.' }
   }
-  if (!file.type.startsWith('image/')) {
-    msgEl.textContent = 'Frame must be an image.'
-    msgEl.className = 'msg error'
-    return
-  }
-
-  var desc = document.getElementById('descInput').value.trim()
-  var anon = document.getElementById('anonCheck').checked
-
-  var slug = generateSlug(title)
-  var ext = file.name.split('.').pop() || 'png'
-  var fileName = slug + '-' + Date.now() + '.' + ext
-
-  pendingSlug = slug
-  pendingTitle = title
-  pendingDesc = desc
-  pendingAnon = anon
-  pendingFileName = fileName
-
-  var reader = new FileReader()
-  reader.onload = function (ev) {
-    pendingFrameDataUrl = ev.target.result
-    showTestStep()
-  }
-  reader.readAsDataURL(file)
 }
 
 function showTestStep() {
