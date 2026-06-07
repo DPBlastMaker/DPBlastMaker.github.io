@@ -11,14 +11,14 @@
     <div class="container">
       <a href="index.html" class="logo">DPBlast Host</a>
       <nav>
-        <a href="dashboard.html">Dashboard</a>
+        <a href="dashboard.html" class="btn btn-outline btn-sm">Dashboard</a>
       </nav>
     </div>
   </header>
 
   <div class="container page">
     <div class="glass max-w-md mx-auto fade-in" id="stepForm">
-      <h2>Create DP Blast</h2>
+      <h2>Upload DP Blast</h2>
       <p class="text-secondary text-sm mb-24">Upload a transparent PNG frame for your campaign.</p>
       <form id="createForm">
         <div class="form-group">
@@ -26,8 +26,22 @@
           <input type="text" id="titleInput" placeholder="e.g. Summer Campaign" required />
         </div>
         <div class="form-group">
+          <label>Description</label>
+          <textarea id="descInput" placeholder="Short description of your campaign..." rows="2" style="width:100%;padding:8px 0;background:transparent;border:none;border-bottom:1px solid var(--divider);color:var(--text-primary);font-size:1rem;outline:none;font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Link URL</label>
+          <input type="url" id="linkInput" placeholder="https://example.com/campaign" />
+        </div>
+        <div class="form-group">
           <label>Frame PNG (transparent overlay)</label>
           <input type="file" id="frameInput" accept="image/png" required />
+        </div>
+        <div class="form-group">
+          <label class="flex gap-8" style="align-items:center;cursor:pointer">
+            <input type="checkbox" id="anonCheck" style="width:18px;height:18px;cursor:pointer" />
+            <span style="color:var(--text-primary)">Show as anonymous</span>
+          </label>
         </div>
         <div id="createMsg" class="msg"></div>
         <div class="flex gap-8">

@@ -16,19 +16,22 @@
     }
   }
 
+  var ownerNames = {}
+
   function createBlastCard(blast) {
     var card = document.createElement('div')
     card.className = 'blast-card'
 
     var imgUrl = blast.frame_url || ''
-
     var viewerUrl = window.location.origin + '/' + blast.slug
+    var name = blast.anonymous ? 'Anonymous' : (ownerNames[blast.owner] || '')
 
     card.innerHTML =
       '<img class="preview" src="' + imgUrl + '" alt="' + escapeHtml(blast.title) + '" loading="lazy" onerror="this.src=\'\';this.style.background=\'var(--bg-secondary)\'">' +
       '<div class="body">' +
         '<h3>' + escapeHtml(blast.title) + '</h3>' +
-        '<div class="slug">#' + escapeHtml(blast.slug) + '</div>' +
+        (blast.description ? '<p class="text-muted text-sm" style="margin:4px 0 4px">' + escapeHtml(blast.description) + '</p>' : '') +
+        '<div class="slug">#' + escapeHtml(blast.slug) + (name ? ' &middot; by ' + escapeHtml(name) : '') + '</div>' +
         '<div class="footer">' +
           '<button class="like-btn" data-id="' + blast.id + '" data-liked="false">' +
             '<span class="heart">♡</span> <span class="count">0</span>' +
@@ -99,7 +102,7 @@
 
     supabase
       .from('dp_blasts')
-      .select('id, title, slug, frame_url, likes')
+      .select('id, title, slug, frame_url, likes, description, owner, anonymous')
       .order('created_at', { ascending: false })
       .then(function (result) {
         loading.style.display = 'none'
@@ -114,26 +117,36 @@
           return
         }
 
-        grid.innerHTML = ''
-        var userLikes = loadLikes()
-
-        blasts.forEach(function (b) {
-          var card = createBlastCard(b)
-          var likeBtn = card.querySelector('.like-btn')
-          var span = likeBtn.querySelector('.count')
-          var heart = likeBtn.querySelector('.heart')
-          span.textContent = b.likes || 0
-
-          if (userLikes[b.id]) {
-            likeBtn.classList.add('liked')
-            heart.textContent = '♥'
-          } else {
-            heart.textContent = '♡'
-          }
-
-          grid.appendChild(card)
-        })
+        var ids = []
+        blasts.forEach(function (b) { if (b.owner && !ids.includes(b.owner)) ids.push(b.owner) })
+        if (ids.length) {
+          supabase.from('profiles').select('id, username').then(function (pr) {
+            if (pr.data) pr.data.forEach(function (p) { ownerNames[p.id] = p.username })
+            renderCards(blasts)
+          }).catch(function () { renderCards(blasts) })
+        } else {
+          renderCards(blasts)
+        }
       })
+  }
+
+  function renderCards(blasts) {
+    grid.innerHTML = ''
+    var userLikes = loadLikes()
+    blasts.forEach(function (b) {
+      var card = createBlastCard(b)
+      var likeBtn = card.querySelector('.like-btn')
+      var span = likeBtn.querySelector('.count')
+      var heart = likeBtn.querySelector('.heart')
+      span.textContent = b.likes || 0
+      if (userLikes[b.id]) {
+        likeBtn.classList.add('liked')
+        heart.textContent = '♥'
+      } else {
+        heart.textContent = '♡'
+      }
+      grid.appendChild(card)
+    })
   }
 
   renderBlasts()

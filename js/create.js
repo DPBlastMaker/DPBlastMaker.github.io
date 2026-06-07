@@ -2,6 +2,9 @@ var currentSession = null
 var pendingSlug = null
 var pendingFrameDataUrl = null
 var pendingTitle = null
+var pendingDesc = ''
+var pendingLink = ''
+var pendingAnon = false
 var pendingFileName = null
 var testPhotoImg = null
 var testState = { offsetX: 0, offsetY: 0, scale: 1, rotation: 0, isDragging: false }
@@ -70,12 +73,19 @@ function handleFormSubmit(e) {
     return
   }
 
+  var desc = document.getElementById('descInput').value.trim()
+  var link = document.getElementById('linkInput').value.trim()
+  var anon = document.getElementById('anonCheck').checked
+
   var slug = generateSlug(title)
   var ext = file.name.split('.').pop() || 'png'
   var fileName = slug + '-' + Date.now() + '.' + ext
 
   pendingSlug = slug
   pendingTitle = title
+  pendingDesc = desc
+  pendingLink = link
+  pendingAnon = anon
   pendingFileName = fileName
 
   var reader = new FileReader()
@@ -206,6 +216,9 @@ async function handlePublish() {
     await supabase.from('dp_blasts').insert({
       title: pendingTitle,
       slug: pendingSlug,
+      description: pendingDesc,
+      link_url: pendingLink,
+      anonymous: pendingAnon,
       frame_url: frameUrl,
       owner: currentSession.user.id,
     })
