@@ -1,5 +1,7 @@
 -- Run in Supabase Dashboard → SQL Editor
--- Fix: rename output columns to avoid ambiguous column errors
+-- Drop first, then recreate with fixed column names
+
+DROP FUNCTION IF EXISTS admin_get_users();
 
 CREATE OR REPLACE FUNCTION admin_get_users()
 RETURNS TABLE(uid UUID, user_email TEXT, user_username TEXT, user_role TEXT, user_created_at TIMESTAMPTZ, last_sign_in_at TIMESTAMPTZ, blast_count BIGINT)
