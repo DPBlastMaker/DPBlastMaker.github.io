@@ -16,7 +16,8 @@ canvas.width = OUTPUT_SIZE
 canvas.height = OUTPUT_SIZE
 
 async function initCreate() {
-  var session = await getSession()
+  var session
+  try { session = await getSession() } catch (e) { session = null }
   if (!session) {
     document.getElementById('stepForm').querySelector('form').style.display = 'none'
     document.getElementById('cancelBtn').style.display = 'none'

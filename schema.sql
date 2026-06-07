@@ -135,7 +135,20 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 GRANT EXECUTE ON FUNCTION increment_likes TO anon, authenticated;
 
--- 9. Rate limit tracking
+-- 9. Optional blast fields (safe to re-run)
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dp_blasts' AND column_name = 'description') THEN
+    ALTER TABLE dp_blasts ADD COLUMN description TEXT DEFAULT '';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dp_blasts' AND column_name = 'link_url') THEN
+    ALTER TABLE dp_blasts ADD COLUMN link_url TEXT DEFAULT '';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'dp_blasts' AND column_name = 'anonymous') THEN
+    ALTER TABLE dp_blasts ADD COLUMN anonymous BOOLEAN DEFAULT false;
+  END IF;
+END $$;
+
+-- 10. Rate limit tracking
 CREATE TABLE IF NOT EXISTS rate_limits (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   action TEXT NOT NULL,
