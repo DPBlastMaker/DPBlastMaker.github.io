@@ -7,6 +7,11 @@ async function initDashboard() {
 
   document.getElementById('username').textContent = currentProfile.username
 
+  if (currentProfile.role === 'admin') {
+    var adminLink = document.getElementById('adminLink')
+    if (adminLink) adminLink.style.display = ''
+  }
+
   await loadBlasts()
 
   document.getElementById('logoutBtn').addEventListener('click', async () => {

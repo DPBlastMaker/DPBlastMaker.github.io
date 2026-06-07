@@ -24,6 +24,13 @@
     <section class="hero">
       <h1>DPBlast Host</h1>
       <p>Create custom profile picture frames for any event or campaign</p>
+      <div style="margin-top:20px" class="nav-auth">
+        <a href="create.html" class="btn btn-primary">Create</a>
+      </div>
+      <div style="margin-top:20px" class="nav-guest">
+        <a href="login.html" class="btn btn-outline">Log in</a>
+        <a href="signup.html" class="btn btn-primary" style="margin-left:8px">Sign up</a>
+      </div>
     </section>
 
     <section class="container page" style="padding-top:0">
@@ -33,7 +40,16 @@
       </div>
       <div id="empty-state" class="empty" style="display:none">
         <p>No DP blasts yet</p>
-        <a href="create.html" class="btn btn-primary">Create the first one</a>
+        <div class="nav-auth">
+          <a href="create.html" class="btn btn-primary">Be the first to upload!</a>
+        </div>
+        <div class="nav-guest">
+          <p class="text-muted text-sm">Log in or sign up to create the first one</p>
+          <div style="margin-top:12px">
+            <a href="login.html" class="btn btn-outline">Log in</a>
+            <a href="signup.html" class="btn btn-primary" style="margin-left:8px">Sign up</a>
+          </div>
+        </div>
       </div>
     </section>
   </main>
