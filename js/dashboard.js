@@ -64,7 +64,7 @@ async function loadBlasts() {
         '<div class="dash-body">',
         '<h3 class="dash-title">' + escapeHtml(b.title) + '</h3>',
         (b.description ? '<p class="dash-desc">' + escapeHtml(b.description) + '</p>' : ''),
-        '<div class="dash-meta">by ' + escapeHtml(name) + ' &middot; /' + b.slug + (b.link_url ? ' &middot; <a href="' + escapeHtml(b.link_url) + '" target="_blank" rel="noopener">Link</a>' : '') + '</div>',
+        '<div class="dash-meta">by ' + escapeHtml(name) + ' &middot; /' + b.slug + '</div>',
         '</div>',
         '</div>',
         '<div class="flex gap-8" style="margin-top:12px">',

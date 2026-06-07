@@ -3,7 +3,6 @@ var pendingSlug = null
 var pendingFrameDataUrl = null
 var pendingTitle = null
 var pendingDesc = ''
-var pendingLink = ''
 var pendingAnon = false
 var pendingFileName = null
 var testPhotoImg = null
@@ -73,7 +72,6 @@ function handleFormSubmit(e) {
   }
 
   var desc = document.getElementById('descInput').value.trim()
-  var link = document.getElementById('linkInput').value.trim()
   var anon = document.getElementById('anonCheck').checked
 
   var slug = generateSlug(title)
@@ -83,7 +81,6 @@ function handleFormSubmit(e) {
   pendingSlug = slug
   pendingTitle = title
   pendingDesc = desc
-  pendingLink = link
   pendingAnon = anon
   pendingFileName = fileName
 
@@ -226,7 +223,6 @@ async function handlePublish() {
       title: pendingTitle,
       slug: pendingSlug,
       description: pendingDesc,
-      link_url: pendingLink,
       anonymous: pendingAnon,
       frame_url: frameUrl,
       owner: currentSession.user.id,
