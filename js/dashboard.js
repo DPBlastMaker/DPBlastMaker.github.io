@@ -15,6 +15,7 @@ async function initDashboard() {
   await loadBlasts()
 
   document.getElementById('logoutBtn').addEventListener('click', async function () {
+    if (!confirm('Log out?')) return
     await logout()
     window.location.href = 'login.html'
   })

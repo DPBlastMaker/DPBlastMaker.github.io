@@ -27,6 +27,7 @@ async function initAdmin() {
     await Promise.all([loadUsers(), loadBlasts()])
     document.getElementById('createUserForm').addEventListener('submit', handleCreateUser)
     document.getElementById('logoutBtn').addEventListener('click', function () {
+      if (!confirm('Log out?')) return
       logout().then(function () { window.location.href = 'login.html' })
     })
     buildDeleteModal()

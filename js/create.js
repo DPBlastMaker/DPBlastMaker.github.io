@@ -23,9 +23,9 @@ async function initCreate() {
     document.getElementById('cancelBtn').style.display = 'none'
     var msg = document.getElementById('createMsg')
     msg.className = 'msg error'
-    msg.innerHTML = 'You need to sign up or log in to create DP Blasts.' +
+    msg.innerHTML = 'Please create an account or log in to upload a DP Blast.' +
       '<div class="mt-12 flex gap-8">' +
-      '<a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>' +
+      '<a href="signup.html" class="btn btn-primary btn-sm">Create Account</a>' +
       '<a href="login.html" class="btn btn-outline btn-sm">Log In</a></div>'
     return
   }
