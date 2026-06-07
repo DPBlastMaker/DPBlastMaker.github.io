@@ -76,7 +76,7 @@ async function _rpc(name, params) {
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
       method: 'POST',
-      headers: _h,
+      headers: { ..._h, ..._ah() },
       body: params ? JSON.stringify(params) : undefined,
     })
     if (res.status >= 400) {

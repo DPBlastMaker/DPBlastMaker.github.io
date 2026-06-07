@@ -7,28 +7,26 @@ var pendingLink = ''
 var pendingAnon = false
 var pendingFileName = null
 var testPhotoImg = null
+var testCanvasCtx = null
 var testState = { offsetX: 0, offsetY: 0, scale: 1, rotation: 0, isDragging: false }
 
 var OUTPUT_SIZE = 512
-var canvas = document.getElementById('testCanvas')
-var ctx = canvas.getContext('2d')
-canvas.width = OUTPUT_SIZE
-canvas.height = OUTPUT_SIZE
 
 async function initCreate() {
+  var el = document.getElementById('createLoading')
+  if (el) el.style.display = 'none'
   var session
   try { session = await getSession() } catch (e) { session = null }
   if (!session) {
-    document.getElementById('stepForm').querySelector('form').style.display = 'none'
-    document.getElementById('cancelBtn').style.display = 'none'
-    var msg = document.getElementById('createMsg')
-    msg.className = 'msg error'
-    msg.innerHTML = 'Please create an account or log in to upload a DP Blast.' +
+    var form = document.getElementById('stepForm')
+    form.style.display = 'block'
+    form.innerHTML = '<div id="createMsg" class="msg error">Please create an account or log in to upload a DP Blast.' +
       '<div class="mt-12 flex gap-8">' +
       '<a href="signup.html" class="btn btn-primary btn-sm">Create Account</a>' +
-      '<a href="login.html" class="btn btn-outline btn-sm">Log In</a></div>'
+      '<a href="login.html" class="btn btn-outline btn-sm">Log In</a></div></div>'
     return
   }
+  document.getElementById('stepForm').style.display = 'block'
   currentSession = session
   document.getElementById('createForm').addEventListener('submit', handleFormSubmit)
   document.getElementById('cancelBtn').addEventListener('click', function () {
@@ -101,6 +99,13 @@ function showTestStep() {
   document.getElementById('stepForm').style.display = 'none'
   document.getElementById('stepTest').style.display = 'block'
 
+  var c = document.getElementById('testCanvas')
+  if (c && !testCanvasCtx) {
+    c.width = OUTPUT_SIZE
+    c.height = OUTPUT_SIZE
+    testCanvasCtx = c.getContext('2d')
+  }
+
   var img = new Image()
   img.onload = function () {
     testState.frame = img
@@ -133,7 +138,9 @@ function handleTestPhoto(e) {
 }
 
 function renderTest() {
-  ctx.clearRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE)
+  var c = testCanvasCtx
+  if (!c) return
+  c.clearRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE)
 
   if (testPhotoImg) {
     var photoSize = OUTPUT_SIZE * testState.scale
@@ -141,18 +148,18 @@ function renderTest() {
     var py = (OUTPUT_SIZE - photoSize) / 2 + testState.offsetY
     var cx = px + photoSize / 2
     var cy = py + photoSize / 2
-    ctx.save()
-    ctx.beginPath()
-    ctx.arc(OUTPUT_SIZE / 2, OUTPUT_SIZE / 2, OUTPUT_SIZE / 2, 0, Math.PI * 2)
-    ctx.clip()
-    ctx.translate(cx, cy)
-    ctx.rotate(testState.rotation * Math.PI / 180)
-    ctx.drawImage(testPhotoImg, -photoSize / 2, -photoSize / 2, photoSize, photoSize)
-    ctx.restore()
+    c.save()
+    c.beginPath()
+    c.arc(OUTPUT_SIZE / 2, OUTPUT_SIZE / 2, OUTPUT_SIZE / 2, 0, Math.PI * 2)
+    c.clip()
+    c.translate(cx, cy)
+    c.rotate(testState.rotation * Math.PI / 180)
+    c.drawImage(testPhotoImg, -photoSize / 2, -photoSize / 2, photoSize, photoSize)
+    c.restore()
   }
 
   if (testState.frame) {
-    ctx.drawImage(testState.frame, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE)
+    c.drawImage(testState.frame, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE)
   }
 }
 
@@ -161,7 +168,8 @@ function setupDrag() {
   var dragStartX, dragStartY, dragOffsetX, dragOffsetY
 
   function getCoords(cx, cy) {
-    var r = canvas.getBoundingClientRect()
+    var el = document.getElementById('testCanvas')
+    var r = el.getBoundingClientRect()
     return { x: (cx - r.left) * (OUTPUT_SIZE / r.width), y: (cy - r.top) * (OUTPUT_SIZE / r.height) }
   }
 

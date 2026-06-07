@@ -17,7 +17,10 @@
   </header>
 
   <div class="container page">
-    <div class="glass max-w-md mx-auto fade-in" id="stepForm">
+    <div id="createLoading" class="glass max-w-md mx-auto fade-in">
+      <p class="text-secondary text-sm" style="text-align:center">Loading...</p>
+    </div>
+    <div class="glass max-w-md mx-auto fade-in" id="stepForm" style="display:none">
       <h2>Upload DP Blast</h2>
       <p class="text-secondary text-sm mb-24">Upload a transparent PNG frame for your campaign.</p>
       <form id="createForm">
@@ -43,12 +46,12 @@
             <span style="color:var(--text-primary)">Show as anonymous</span>
           </label>
         </div>
-        <div id="createMsg" class="msg"></div>
         <div class="flex gap-8">
           <button type="submit" class="btn btn-primary">Create</button>
           <button type="button" class="btn btn-outline" id="cancelBtn">Cancel</button>
         </div>
       </form>
+      <div id="createMsg" class="msg"></div>
     </div>
 
     <div class="glass max-w-md mx-auto fade-in" id="stepTest" style="display:none">
