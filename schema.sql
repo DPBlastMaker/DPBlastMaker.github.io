@@ -199,9 +199,8 @@ $$;
 
 -- Admin: list all users with profile + blast count
 CREATE OR REPLACE FUNCTION admin_get_users()
-RETURNS TABLE(id UUID, email TEXT, username TEXT, role TEXT, created_at TIMESTAMPTZ, last_sign_in_at TIMESTAMPTZ, blast_count BIGINT)
-LANGUAGE plpgsql SECURITY DEFINER
-AS $$
+RETURNS TABLE(uid UUID, user_email TEXT, user_username TEXT, user_role TEXT, user_created_at TIMESTAMPTZ, last_sign_in_at TIMESTAMPTZ, blast_count BIGINT)
+LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin') THEN
     RAISE EXCEPTION 'Only admins can list users';

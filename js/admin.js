@@ -129,17 +129,17 @@ function loadUsers() {
     if (data.length === 0) { container.innerHTML = '<p class="text-muted">No users.</p>'; return }
     var html = ''
     data.forEach(function (u) {
-      var isSelf = currentSession && u.id === currentSession.user.id
+      var isSelf = currentSession && u.uid === currentSession.user.id
       html += [
-        '<div class="usr" data-id="' + u.id + '">',
+        '<div class="usr" data-id="' + u.uid + '">',
         '<div class="usr-body">',
-        '<div class="usr-name">' + escapeHtml(u.username) + '</div>',
-        '<div class="usr-meta">' + escapeHtml((u.email || '').split('@')[0] + '@…') + ' · ' + (u.blast_count || 0) + ' blasts · joined ' + fmtDate(u.created_at) + '</div>',
+        '<div class="usr-name">' + escapeHtml(u.user_username) + '</div>',
+        '<div class="usr-meta">' + escapeHtml((u.user_email || '').split('@')[0] + '@…') + ' · ' + (u.blast_count || 0) + ' blasts · joined ' + fmtDate(u.user_created_at) + '</div>',
         '</div>',
         '<div class="usr-actions">',
-        '<span class="badge ' + (u.role === 'admin' ? 'badge-admin' : 'badge-creator') + '">' + u.role + '</span>',
-        !isSelf ? '<button class="btn btn-outline btn-sm rpw" data-id="' + u.id + '" data-name="' + escapeHtml(u.username) + '">Reset PW</button>' : '',
-        !isSelf ? '<button class="btn btn-danger btn-sm del" data-id="' + u.id + '" data-name="' + escapeHtml(u.username) + '">Delete</button>' : '',
+        '<span class="badge ' + (u.user_role === 'admin' ? 'badge-admin' : 'badge-creator') + '">' + u.user_role + '</span>',
+        !isSelf ? '<button class="btn btn-outline btn-sm rpw" data-id="' + u.uid + '" data-name="' + escapeHtml(u.user_username) + '">Reset PW</button>' : '',
+        !isSelf ? '<button class="btn btn-danger btn-sm del" data-id="' + u.uid + '" data-name="' + escapeHtml(u.user_username) + '">Delete</button>' : '',
         '</div>',
         '</div>'
       ].join('')
