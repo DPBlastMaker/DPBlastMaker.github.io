@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DPBlast Host ┃ Sign Up</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">DPBlast Host</a>
+      <nav>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container page">
+    <div class="glass max-w-sm mx-auto fade-in">
+      <h2>Create Creator Account</h2>
+      <p class="text-secondary text-sm mb-24">Sign up to create and manage DP Blasts.</p>
+      <form id="signupForm">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="usernameInput" placeholder="Choose a username" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="passwordInput" placeholder="Min 6 characters" required minlength="6" />
+        </div>
+        <div id="signupMsg" class="msg"></div>
+        <button type="submit" class="btn btn-primary w-full">Create Account</button>
+      </form>
+      <p class="text-muted text-sm mt-16 text-center">Already have an account? <a href="login.html">Sign in</a></p>
+    </div>
+  </div>
+
+  <button id="darkToggle" title="Toggle dark mode" style="
+    position:fixed;bottom:20px;right:20px;z-index:998;
+    width:44px;height:44px;border-radius:50%;border:2px solid var(--divider);
+    background:var(--bg-card);color:var(--text-primary);cursor:pointer;
+    font-size:1.25rem;box-shadow:var(--shadow-1);
+    display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);
+  ">🌙</button>
+
+  <style>
+    body.dark #darkToggle { border-color: var(--divider); background: var(--bg-card); }
+  </style>
+
+  <script src="js/dark.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const username = document.getElementById('usernameInput').value.trim()
+      const password = document.getElementById('passwordInput').value
+      const msgEl = document.getElementById('signupMsg')
+      msgEl.className = 'msg'
+
+      if (!username || password.length < 6) {
+        msgEl.textContent = 'Username required and password must be at least 6 characters.'
+        msgEl.className = 'msg error'
+        return
+      }
+
+      const btn = e.target.querySelector('button[type="submit"]')
+      btn.disabled = true
+      btn.textContent = 'Creating...'
+
+      try {
+        const email = `${username}@dpblast.local`
+        const { data, error } = await supabase.auth.signUp({ email, password })
+        if (error) throw error
+
+        if (!data?.user && !data?.id) {
+          msgEl.textContent = 'Account created! Check email to confirm, then log in.'
+          msgEl.className = 'msg success'
+          btn.disabled = false
+          btn.textContent = 'Create Account'
+          return
+        }
+
+        try { await login(email, password) } catch {}
+        const session = await getSession()
+        if (session) { window.location.href = 'dashboard.html'; return }
+        window.location.href = 'dashboard.html'
+      } catch (err) {
+        msgEl.textContent = err.message || 'Sign up failed. Try again.'
+        msgEl.className = 'msg error'
+        btn.disabled = false
+        btn.textContent = 'Create Account'
+      }
+    })
+  </script>
+</body>
+</html>

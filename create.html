@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DPBlast Host ┃ Create</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">DPBlast Host</a>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container page">
+    <div class="glass max-w-md mx-auto fade-in" id="stepForm">
+      <h2>Create DP Blast</h2>
+      <p class="text-secondary text-sm mb-24">Upload a transparent PNG frame for your campaign.</p>
+      <form id="createForm">
+        <div class="form-group">
+          <label>Campaign Title</label>
+          <input type="text" id="titleInput" placeholder="e.g. Summer Campaign" required />
+        </div>
+        <div class="form-group">
+          <label>Frame PNG (transparent overlay)</label>
+          <input type="file" id="frameInput" accept="image/png" required />
+        </div>
+        <div id="createMsg" class="msg"></div>
+        <div class="flex gap-8">
+          <button type="submit" class="btn btn-primary">Create</button>
+          <button type="button" class="btn btn-outline" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="glass max-w-md mx-auto fade-in" id="stepTest" style="display:none">
+      <h2>Test Your Frame</h2>
+      <p class="text-secondary text-sm mb-24">Upload a sample photo to see how it looks, then publish.</p>
+
+      <div class="viewer-container">
+        <div class="viewer-canvas-wrap" id="testCanvasWrap">
+          <canvas id="testCanvas"></canvas>
+        </div>
+
+        <div class="zoom-controls" style="padding-top:16px">
+          <span class="label" style="min-width:32px">Zoom</span>
+          <input type="range" id="zoomSlider" min="0.5" max="3" step="0.05" value="1">
+          <span class="label" id="zoomLabel">1.0x</span>
+        </div>
+        <div class="zoom-controls" style="padding-top:0">
+          <span class="label" style="min-width:32px">Rotate</span>
+          <input type="range" id="rotateSlider" min="0" max="360" step="1" value="0">
+          <span class="label" id="rotateLabel">0°</span>
+        </div>
+
+        <label class="btn btn-outline w-full text-center" style="cursor:pointer;margin-top:8px">
+          <input type="file" id="testPhoto" accept="image/*" style="display:none">
+          Upload sample photo
+        </label>
+      </div>
+
+      <div id="testMsg" class="msg mt-16"></div>
+
+      <div class="flex gap-8 mt-16">
+        <button class="btn btn-primary" id="publishBtn">It works!</button>
+        <button class="btn btn-outline" id="cancelTestBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <button id="darkToggle" title="Toggle dark mode" style="
+    position:fixed;bottom:20px;right:20px;z-index:998;
+    width:44px;height:44px;border-radius:50%;border:2px solid var(--divider);
+    background:var(--bg-card);color:var(--text-primary);cursor:pointer;
+    font-size:1.25rem;box-shadow:var(--shadow-1);
+    display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);
+  ">🌙</button>
+  <style>
+    body.dark #darkToggle { border-color: var(--divider); background: var(--bg-card); }
+  </style>
+
+  <script src="js/dark.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/create.js"></script>
+</body>
+</html>

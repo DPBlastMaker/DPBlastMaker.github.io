@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DPBlast Host ┃ Custom Profile Picture Frames</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="logo">DPBlast Host</a>
+      <nav>
+        <button id="aboutBtn" class="btn btn-outline btn-sm">About</button>
+        <a href="dashboard.html" class="btn btn-outline btn-sm nav-auth">Dashboard</a>
+        <a href="create.html" class="btn btn-primary btn-sm nav-auth">Create</a>
+        <a href="login.html" class="btn btn-outline btn-sm nav-guest">Login</a>
+        <button id="logoutBtnHome" class="btn btn-outline btn-sm nav-auth" style="display:none">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>DPBlast Host</h1>
+      <p>Create custom profile picture frames for any event or campaign</p>
+    </section>
+
+    <section class="container page" style="padding-top:0">
+      <div id="blasts-grid" class="grid"></div>
+      <div id="loading-state">
+        <div class="spinner"></div>
+      </div>
+      <div id="empty-state" class="empty" style="display:none">
+        <p>No DP blasts yet</p>
+        <a href="create.html" class="btn btn-primary">Create the first one</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="aboutModal" style="position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;padding:24px">
+    <div class="glass">
+      <button id="closeAbout" class="btn btn-outline btn-icon" style="position:absolute;top:16px;right:16px">✕</button>
+      <h2>About DPBlast Host</h2>
+      <p class="text-secondary" style="margin-bottom:16px;line-height:1.7">
+        <strong>DP Blast</strong> lets you create custom profile picture frames for any event, campaign, or movement.
+      </p>
+      <p class="text-secondary" style="margin-bottom:12px;line-height:1.7">
+        <strong>How it works:</strong>
+      </p>
+      <ul class="text-secondary" style="padding-left:20px;line-height:2">
+        <li><strong>Creators</strong> upload a transparent PNG frame and get a shareable link</li>
+        <li><strong>Anyone</strong> opens the link, uploads their profile photo, and positions it within the frame</li>
+        <li><strong>Download</strong> the final composite image and set it as your profile picture</li>
+      </ul>
+      <div class="mt-16 text-muted text-sm" style="padding-top:16px;border-top:1px solid var(--border)">
+        Built with Supabase &middot; 100% open source
+      </div>
+    </div>
+  </div>
+
+  <style>
+    #aboutModal { display:none; }
+    #aboutModal.active { display:flex; animation:fadeIn 0.2s ease; }
+    #aboutModal .glass { animation:fadeIn 0.3s ease; }
+  </style>
+
+  <button id="darkToggle" title="Toggle dark mode" style="
+    position:fixed;bottom:20px;right:20px;z-index:998;
+    width:44px;height:44px;border-radius:50%;border:2px solid var(--divider);
+    background:var(--bg-card);color:var(--text-primary);cursor:pointer;
+    font-size:1.25rem;box-shadow:var(--shadow-1);
+    display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);
+  ">🌙</button>
+
+  <style>
+    body.dark #darkToggle { border-color: var(--divider); background: var(--bg-card); }
+  </style>
+
+  <script>
+    document.getElementById('aboutBtn').addEventListener('click', function () {
+      document.getElementById('aboutModal').classList.add('active')
+    })
+    document.getElementById('closeAbout').addEventListener('click', function () {
+      document.getElementById('aboutModal').classList.remove('active')
+    })
+    document.getElementById('aboutModal').addEventListener('click', function (e) {
+      if (e.target === this) this.classList.remove('active')
+    })
+  </script>
+
+  <script src="js/dark.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

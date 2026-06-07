@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DPBlast Host ┃ Login</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo">DPBlast Host</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="signup.html">Sign Up</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container page">
+    <div class="glass max-w-sm mx-auto fade-in">
+      <h2>Login</h2>
+      <p class="text-secondary text-sm mb-24">Sign in with your creator or admin account.</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="usernameInput" placeholder="Enter your username" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="passwordInput" placeholder="Enter your password" required autocomplete="current-password" />
+        </div>
+        <div id="loginMsg" class="msg"></div>
+        <button type="submit" class="btn btn-primary w-full">Sign In</button>
+      </form>
+      <p class="text-muted text-sm mt-16 text-center">No account? <a href="signup.html">Sign up</a></p>
+    </div>
+  </div>
+
+  <button id="darkToggle" title="Toggle dark mode" style="
+    position:fixed;bottom:20px;right:20px;z-index:998;
+    width:44px;height:44px;border-radius:50%;border:2px solid var(--divider);
+    background:var(--bg-card);color:var(--text-primary);cursor:pointer;
+    font-size:1.25rem;box-shadow:var(--shadow-1);
+    display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);
+  ">🌙</button>
+
+  <style>
+    body.dark #darkToggle { border-color: var(--divider); background: var(--bg-card); }
+  </style>
+
+  <script src="js/dark.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const username = document.getElementById('usernameInput').value.trim()
+      const password = document.getElementById('passwordInput').value
+      const msgEl = document.getElementById('loginMsg')
+      msgEl.className = 'msg'
+
+      const btn = e.target.querySelector('button[type="submit"]')
+      btn.disabled = true
+      btn.textContent = 'Signing in...'
+
+      try {
+        const email = username.includes('@') ? username : `${username}@dpblast.local`
+        const data = await login(email, password)
+        const profile = await getProfile(data.user.id)
+        window.location.href = profile.role === 'admin' ? 'admin.html' : 'dashboard.html'
+      } catch (err) {
+        msgEl.textContent = err.message || 'Invalid username or password.'
+        msgEl.className = 'msg error'
+        btn.disabled = false
+        btn.textContent = 'Sign In'
+      }
+    })
+  </script>
+</body>
+</html>

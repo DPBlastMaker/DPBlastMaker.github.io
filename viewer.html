@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DPBlast Host ┃ Viewer</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="logo">DPBlast Host</a>
+      <nav>
+        <a href="/" class="btn btn-outline btn-sm">Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page">
+    <div id="viewer-loading" class="flex-center" style="min-height:60vh">
+      <div class="spinner"></div>
+    </div>
+
+    <div id="viewer-content" style="display:none">
+      <div class="glass max-w-lg mx-auto fade-in">
+        <div class="flex-between mb-16">
+          <div>
+            <h2 id="blast-title" class="page-title" style="margin-bottom:4px">Title</h2>
+            <p class="text-muted text-sm" id="blast-slug"></p>
+          </div>
+        </div>
+
+        <div class="viewer-container">
+          <div class="viewer-canvas-wrap" id="canvasWrap">
+            <canvas id="previewCanvas"></canvas>
+            <div id="drag-hint" style="
+              position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+              background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);
+              padding:6px 14px;border-radius:20px;
+              font-size:0.75rem;color:var(--text-secondary);pointer-events:none;
+              transition:opacity 0.3s;opacity:0;
+            ">Drag photo to reposition</div>
+          </div>
+
+          <div class="zoom-controls">
+            <span class="label" style="min-width:32px">Zoom</span>
+            <input type="range" id="zoomSlider" min="0.5" max="3" step="0.05" value="1">
+            <span class="label" id="zoomLabel">1.0x</span>
+          </div>
+
+          <div class="zoom-controls" style="padding-top:0">
+            <span class="label" style="min-width:32px">Rotate</span>
+            <input type="range" id="rotateSlider" min="0" max="360" step="1" value="0">
+            <span class="label" id="rotateLabel">0°</span>
+          </div>
+
+          <div class="flex gap-12" style="flex-wrap:wrap">
+            <label class="btn btn-outline" style="cursor:pointer">
+              <input type="file" id="photoInput" accept="image/*" style="display:none">
+              Upload Photo
+            </label>
+            <button class="btn btn-primary" id="downloadBtn" disabled>Download PNG</button>
+            <button class="btn btn-outline" id="resetBtn">Reset</button>
+          </div>
+        </div>
+
+        <div id="viewer-msg" class="msg mt-16"></div>
+      </div>
+    </div>
+
+    <div id="viewer-error" style="display:none" class="empty">
+      <p id="error-text">DP Blast not found.</p>
+      <a href="/" class="btn btn-primary mt-16">Back to Home</a>
+    </div>
+  </main>
+
+  <button id="darkToggle" title="Toggle dark mode" style="
+    position:fixed;bottom:20px;right:20px;z-index:998;
+    width:44px;height:44px;border-radius:50%;border:2px solid var(--divider);
+    background:var(--bg-card);color:var(--text-primary);cursor:pointer;
+    font-size:1.25rem;box-shadow:var(--shadow-1);
+    display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);
+  ">🌙</button>
+
+  <style>
+    body.dark #darkToggle { border-color: var(--divider); background: var(--bg-card); }
+  </style>
+
+  <script src="js/dark.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/viewer.js"></script>
+</body>
+</html>
