@@ -19,6 +19,9 @@ async function initDashboard() {
     await logout()
     window.location.href = 'login.html'
   })
+
+  document.getElementById('editSaveBtn').addEventListener('click', saveEdit)
+  document.getElementById('editCancelBtn').addEventListener('click', cancelEdit)
 }
 
 async function loadBlasts() {
@@ -68,6 +71,7 @@ async function loadBlasts() {
         '</div>',
         '</div>',
         '<div class="flex gap-8" style="margin-top:12px">',
+        '<button class="btn btn-outline btn-sm edit-blast" data-id="' + b.id + '" data-title="' + escapeHtml(b.title) + '" data-desc="' + escapeHtml(b.description || '') + '">Edit</button>',
         '<button class="btn btn-outline btn-sm copy-link" data-slug="' + b.slug + '">Copy Link</button>',
         '<a href="' + viewerUrl + '" class="btn btn-primary btn-sm">Open</a>',
         '<button class="btn btn-danger btn-sm delete-blast" data-id="' + b.id + '">Delete</button>',
@@ -81,6 +85,9 @@ async function loadBlasts() {
     })
     container.querySelectorAll('.delete-blast').forEach(function (btn) {
       btn.addEventListener('click', function () { deleteBlast(btn.dataset.id) })
+    })
+    container.querySelectorAll('.edit-blast').forEach(function (btn) {
+      btn.addEventListener('click', function () { openEdit(btn.dataset.id, btn.dataset.title, btn.dataset.desc) })
     })
   } catch (err) {
     container.innerHTML = '<div class="msg error">' + escapeHtml(err.message || 'Failed') + '</div>'
@@ -104,6 +111,56 @@ async function deleteBlast(id) {
   } catch (err) {
     alert(err.message || 'Failed to delete.')
   }
+}
+
+var editingId = null
+
+function openEdit(id, title, desc) {
+  editingId = id
+  document.getElementById('editTitle').value = title
+  document.getElementById('editDesc').value = desc
+  document.getElementById('editMsg').className = 'msg'
+  document.getElementById('editMsg').textContent = ''
+  document.getElementById('editModal').style.display = ''
+}
+
+async function saveEdit() {
+  var title = document.getElementById('editTitle').value.trim()
+  var desc = document.getElementById('editDesc').value.trim()
+  var msgEl = document.getElementById('editMsg')
+  msgEl.className = 'msg'
+
+  if (!title) {
+    msgEl.textContent = 'Title is required.'
+    msgEl.className = 'msg error'
+    return
+  }
+
+  var btn = document.getElementById('editSaveBtn')
+  btn.disabled = true
+  btn.textContent = 'Saving...'
+
+  try {
+    var r = await supabase.from('dp_blasts').update({ title: title, description: desc }).eq('id', editingId)
+    if (r.error) throw r.error
+    cancelEdit()
+    await loadBlasts()
+  } catch (err) {
+    msgEl.textContent = err.message || 'Failed to save.'
+    msgEl.className = 'msg error'
+  } finally {
+    btn.disabled = false
+    btn.textContent = 'Save'
+  }
+}
+
+function cancelEdit() {
+  editingId = null
+  document.getElementById('editTitle').value = ''
+  document.getElementById('editDesc').value = ''
+  document.getElementById('editMsg').className = 'msg'
+  document.getElementById('editMsg').textContent = ''
+  document.getElementById('editModal').style.display = 'none'
 }
 
 function escapeHtml(s) {

@@ -34,6 +34,7 @@ class QB {
   order(col, { ascending } = {}) { this._orderCol = col; this._orderDir = ascending ? 'asc' : 'desc'; return this }
   select(cols) { this._selectCols = cols || '*'; this._method = 'select'; return this }
   insert(body) { this._body = body; this._method = 'insert'; return this }
+  update(body) { this._body = body; this._method = 'update'; return this }
   delete() { this._method = 'delete'; return this }
 
   then(resolve, reject) {
@@ -46,6 +47,15 @@ class QB {
         method: 'POST', headers: { ..._h, ..._ah(), 'Prefer': 'return=minimal' }, body: JSON.stringify(this._body),
       })
       if (res.status >= 400) { const d = await res.json().catch(() => ({})); return { data: null, error: { message: d.message || d.msg || `Insert failed (${res.status})` } } }
+      return { data: null, error: null }
+    }
+    if (this._method === 'update') {
+      let q = `/rest/v1/${this.table}`
+      if (this.filters.length) q += '?' + this.filters.join('&')
+      const res = await fetch(`${SUPABASE_URL}${q}`, {
+        method: 'PATCH', headers: { ..._h, ..._ah(), 'Prefer': 'return=minimal' }, body: JSON.stringify(this._body),
+      })
+      if (res.status >= 400) { const d = await res.json().catch(() => ({})); return { data: null, error: { message: d.message || d.msg || `Update failed (${res.status})` } } }
       return { data: null, error: null }
     }
     if (this._method === 'delete') {
